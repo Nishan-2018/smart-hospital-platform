@@ -44,6 +44,25 @@ spec:
             - containerPort: {{ $service.port }}
           resources:
             {{- toYaml $service.resources | nindent 12 }}
+          env:
+            - name: DB_HOST
+              value: {{ $.Values.database.host | quote }}
+            - name: DB_NAME
+              value: {{ index $.Values.database.names $key | default $service.name | quote }}
+            - name: DB_USER
+              value: {{ $.Values.database.user | quote }}
+            - name: DB_PASSWORD
+              value: {{ $.Values.database.password | quote }}
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_SSL
+              value: "true"
+            - name: RABBITMQ_URL
+              value: {{ $.Values.rabbitmq.url | quote }}
+            - name: PATIENT_SERVICE_URL
+              value: "http://patient-service.{{ $.Values.global.namespace }}.svc.cluster.local"
+            - name: APPOINTMENT_SERVICE_URL
+              value: "http://appointment-service.{{ $.Values.global.namespace }}.svc.cluster.local"
           livenessProbe:
             httpGet:
               path: /api/v1/health/live

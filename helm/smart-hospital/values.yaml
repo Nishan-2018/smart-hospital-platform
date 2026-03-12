@@ -134,3 +134,15 @@ monitoring:
     enabled: true
   grafana:
     enabled: true
+
+database:
+  host: "psql-smart-hospital-dev.postgres.database.azure.com"
+  user: "hospitaladmin@psql-smart-hospital-dev"
+  password: "SmartHospital@123"
+  names:
+    patient: "patient_db"
+    appointment: "appointment_db"
+    notification: "notification_db"
+
+rabbitmq:
+  url: "amqp://guest:guest@rabbitmq.smart-hospital.svc.cluster.local:5672"
