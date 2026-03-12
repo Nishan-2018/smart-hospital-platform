@@ -238,6 +238,11 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: 🔐 Setup kubelogin
+        uses: azure/use-kubelogin@v1
+        with:
+          kubelogin-version: 'v0.0.32'
+
       - name: ☸️ Set AKS Context
         uses: azure/aks-set-context@v3
         with:
@@ -283,6 +288,11 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
+      - name: 🔐 Setup kubelogin
+        uses: azure/use-kubelogin@v1
+        with:
+          kubelogin-version: 'v0.0.32'
+
       - name: ☸️ Set AKS Context
         uses: azure/aks-set-context@v3
         with:
@@ -322,6 +332,11 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 🔐 Setup kubelogin
+        uses: azure/use-kubelogin@v1
+        with:
+          kubelogin-version: 'v0.0.32'
 
       - name: ☸️ Set AKS Context
         uses: azure/aks-set-context@v3
