@@ -1,0 +1,136 @@
+# Default values for smart-hospital
+replicaCount: 2
+
+global:
+  environment: dev
+  namespace: smart-hospital
+  imagePullPolicy: Always
+
+image:
+  registry: acrsmarthospitaldev.azurecr.io
+  pullSecrets: []
+
+patientService:
+  enabled: true
+  name: patient-service
+  image:
+    repository: patient-service
+    tag: latest
+  port: 3001
+  replicas: 2
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilization: 70
+
+appointmentService:
+  enabled: true
+  name: appointment-service
+  image:
+    repository: appointment-service
+    tag: latest
+  port: 3002
+  replicas: 2
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "500m"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 8
+    targetCPUUtilization: 70
+
+notificationService:
+  enabled: true
+  name: notification-service
+  image:
+    repository: notification-service
+    tag: latest
+  port: 3003
+  replicas: 1
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "50m"
+    limits:
+      memory: "256Mi"
+      cpu: "250m"
+
+aiPredictionService:
+  enabled: true
+  name: ai-prediction-service
+  image:
+    repository: ai-prediction-service
+    tag: latest
+  port: 3004
+  replicas: 2
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "200m"
+    limits:
+      memory: "512Mi"
+      cpu: "1000m"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 6
+    targetCPUUtilization: 60
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+  hosts:
+    - host: api.smarthospital.com
+      paths:
+        - path: /api/v1/patients
+          pathType: Prefix
+          service: patient-service
+        - path: /api/v1/appointments
+          pathType: Prefix
+          service: appointment-service
+        - path: /api/v1/notifications
+          pathType: Prefix
+          service: notification-service
+        - path: /api/v1/predict
+          pathType: Prefix
+          service: ai-prediction-service
+  tls:
+    - secretName: smart-hospital-tls
+      hosts:
+        - api.smarthospital.com
+
+serviceAccount:
+  create: true
+  name: smart-hospital-sa
+
+networkPolicy:
+  enabled: true
+
+resourceQuota:
+  enabled: true
+  cpu: "8"
+  memory: 8Gi
+  pods: "50"
+
+monitoring:
+  prometheus:
+    enabled: true
+  grafana:
+    enabled: true

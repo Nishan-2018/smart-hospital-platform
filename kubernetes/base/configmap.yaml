@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: smart-hospital-config
+  namespace: smart-hospital
+data:
+  NODE_ENV: "production"
+  LOG_LEVEL: "info"
+  CORS_ORIGIN: "https://smarthospital.com"
+  PATIENT_SERVICE_URL: "http://patient-service.smart-hospital.svc.cluster.local/api/v1"
+  APPOINTMENT_SERVICE_URL: "http://appointment-service.smart-hospital.svc.cluster.local/api/v1"
+  NOTIFICATION_SERVICE_URL: "http://notification-service.smart-hospital.svc.cluster.local/api/v1"
+  AI_SERVICE_URL: "http://ai-prediction-service.smart-hospital.svc.cluster.local/api/v1"

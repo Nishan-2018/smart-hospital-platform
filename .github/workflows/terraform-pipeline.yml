@@ -1,0 +1,85 @@
+name: Infrastructure Deployment (Terraform)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'infrastructure/terraform/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'infrastructure/terraform/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - production
+      action:
+        description: 'Terraform action'
+        required: true
+        default: 'plan'
+        type: choice
+        options:
+          - plan
+          - apply
+          - destroy
+
+env:
+  TF_VERSION: '1.6.6'
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+
+jobs:
+  terraform:
+    name: "Terraform ${{ github.event.inputs.action || 'plan' }} - ${{ github.event.inputs.environment || 'dev' }}"
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'dev' }}
+
+    steps:
+      - name: 📥 Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: 🏗️ Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: 📋 Terraform Init
+        working-directory: infrastructure/terraform
+        run: terraform init
+
+      - name: ✅ Terraform Validate
+        working-directory: infrastructure/terraform
+        run: terraform validate
+
+      - name: 🔍 Terraform Format Check
+        working-directory: infrastructure/terraform
+        run: terraform fmt -check -recursive
+
+      - name: 📋 Terraform Plan
+        working-directory: infrastructure/terraform
+        run: |
+          terraform plan \
+            -var-file=environments/${{ github.event.inputs.environment || 'dev' }}.tfvars \
+            -out=tfplan
+
+      - name: 🚀 Terraform Apply
+        if: github.event.inputs.action == 'apply' && github.ref == 'refs/heads/main'
+        working-directory: infrastructure/terraform
+        run: terraform apply -auto-approve tfplan
+
+      - name: 💀 Terraform Destroy
+        if: github.event.inputs.action == 'destroy' && github.ref == 'refs/heads/main'
+        working-directory: infrastructure/terraform
+        run: |
+          terraform destroy \
+            -var-file=environments/${{ github.event.inputs.environment || 'dev' }}.tfvars \
+            -auto-approve

@@ -1,0 +1,68 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+
+rule_files:
+  - 'alert_rules.yml'
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Patient Service
+  - job_name: 'patient-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['patient-service:3001']
+        labels:
+          service: 'patient-service'
+          environment: 'development'
+
+  # Appointment Service
+  - job_name: 'appointment-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['appointment-service:3002']
+        labels:
+          service: 'appointment-service'
+          environment: 'development'
+
+  # AI Prediction Service
+  - job_name: 'ai-prediction-service'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['ai-prediction-service:3004']
+        labels:
+          service: 'ai-prediction-service'
+          environment: 'development'
+
+  # Node Exporter (if available)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+
+  # Kubernetes Service Discovery (for K8s deployments)
+  # - job_name: 'kubernetes-pods'
+  #   kubernetes_sd_configs:
+  #     - role: pod
+  #   relabel_configs:
+  #     - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+  #       action: keep
+  #       regex: true
+  #     - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+  #       action: replace
+  #       target_label: __metrics_path__
+  #       regex: (.+)
+  #     - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+  #       action: replace
+  #       regex: ([^:]+)(?::\d+)?;(\d+)
+  #       replacement: $1:$2
+  #       target_label: __address__
