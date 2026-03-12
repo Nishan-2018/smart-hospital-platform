@@ -1,8 +1,8 @@
 # Development Environment
-subscription_id    = "YOUR_SUBSCRIPTION_ID"
-tenant_id          = "YOUR_TENANT_ID"
+subscription_id    = "9ddc0128-804d-4770-8592-bdf986ab5711"
+tenant_id          = "810c5dcc-4459-4053-aad3-67ca4b51fd45"
 environment        = "dev"
-location           = "East US"
+location           = "Central India"
 project_name       = "smart-hospital"
 
 # AKS
@@ -18,6 +18,6 @@ aks_subnet_cidr    = "10.0.1.0/24"
 db_subnet_cidr     = "10.0.2.0/24"
 
 # Database
-db_admin_login    = "hospitaladmin"
-db_admin_password = "CHANGE_ME_SECURE_PASSWORD"
-db_sku_name       = "B_Standard_B1ms"
+db_admin_login     = "hospitaladmin"
+db_admin_password  = "SmartHospital@123"
+db_sku_name        = "B_Standard_B1ms"

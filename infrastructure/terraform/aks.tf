@@ -38,7 +38,7 @@ resource "azurerm_kubernetes_cluster" "main" {
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   dns_prefix          = "${var.project_name}-${var.environment}"
-  kubernetes_version  = var.kubernetes_version
+  # kubernetes_version  = var.kubernetes_version
 
   default_node_pool {
     name                = "default"
@@ -96,6 +96,7 @@ resource "azurerm_role_assignment" "aks_acr_pull" {
   scope                = azurerm_container_registry.main.id
   role_definition_name = "AcrPull"
   principal_id         = azurerm_kubernetes_cluster.main.kubelet_identity[0].object_id
+  depends_on           = [azurerm_kubernetes_cluster.main]
 }
 
 # ============================================
@@ -145,8 +146,12 @@ resource "azurerm_postgresql_flexible_server" "main" {
   resource_group_name    = azurerm_resource_group.main.name
   location               = azurerm_resource_group.main.location
   version                = "15"
-  delegated_subnet_id    = azurerm_subnet.db.id
-  private_dns_zone_id    = azurerm_private_dns_zone.postgres.id
+
+  delegated_subnet_id = azurerm_subnet.db.id
+  private_dns_zone_id = azurerm_private_dns_zone.postgres.id
+
+  public_network_access_enabled = false
+
   administrator_login    = var.db_admin_login
   administrator_password = var.db_admin_password
   zone                   = "1"
@@ -161,21 +166,6 @@ resource "azurerm_postgresql_flexible_server" "main" {
 
   depends_on = [azurerm_private_dns_zone_virtual_network_link.postgres]
 }
-
-resource "azurerm_postgresql_flexible_server_database" "patient_db" {
-  name      = "patient_db"
-  server_id = azurerm_postgresql_flexible_server.main.id
-  collation = "en_US.utf8"
-  charset   = "utf8"
-}
-
-resource "azurerm_postgresql_flexible_server_database" "appointment_db" {
-  name      = "appointment_db"
-  server_id = azurerm_postgresql_flexible_server.main.id
-  collation = "en_US.utf8"
-  charset   = "utf8"
-}
-
 # ============================================
 # Key Vault
 # ============================================
@@ -191,6 +181,8 @@ resource "azurerm_key_vault" "main" {
   soft_delete_retention_days  = 7
   purge_protection_enabled    = var.environment == "production" ? true : false
   sku_name                    = "standard"
+
+  depends_on = [azurerm_kubernetes_cluster.main]
 
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
