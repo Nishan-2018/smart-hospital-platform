@@ -238,16 +238,12 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: 🔐 Setup kubelogin
-        uses: azure/use-kubelogin@v1
-        with:
-          kubelogin-version: 'v0.0.32'
-
       - name: ☸️ Set AKS Context
         uses: azure/aks-set-context@v3
         with:
           resource-group: ${{ env.AKS_RESOURCE_GROUP }}
           cluster-name: ${{ env.AKS_CLUSTER_NAME }}
+          admin: 'true'
 
       - name: 🚀 Deploy with Helm
         run: |
@@ -288,16 +284,12 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: 🔐 Setup kubelogin
-        uses: azure/use-kubelogin@v1
-        with:
-          kubelogin-version: 'v0.0.32'
-
       - name: ☸️ Set AKS Context
         uses: azure/aks-set-context@v3
         with:
           resource-group: ${{ env.AKS_RESOURCE_GROUP }}
           cluster-name: ${{ env.AKS_CLUSTER_NAME }}
+          admin: 'true'
 
       - name: 🚀 Deploy with Helm
         run: |
@@ -333,16 +325,12 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: 🔐 Setup kubelogin
-        uses: azure/use-kubelogin@v1
-        with:
-          kubelogin-version: 'v0.0.32'
-
       - name: ☸️ Set AKS Context
         uses: azure/aks-set-context@v3
         with:
           resource-group: ${{ env.AKS_RESOURCE_GROUP }}
           cluster-name: ${{ env.AKS_CLUSTER_NAME }}
+          admin: 'true'
 
       - name: 🚀 Deploy with Helm
         run: |
