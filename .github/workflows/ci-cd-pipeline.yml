@@ -253,10 +253,10 @@ jobs:
             -f ./helm/smart-hospital/values.yaml \
             --set global.environment=dev \
             --set image.registry=${{ env.ACR_REGISTRY }} \
-            --set patientService.image.tag=${{ github.sha }} \
-            --set appointmentService.image.tag=${{ github.sha }} \
-            --set notificationService.image.tag=${{ github.sha }} \
-            --set aiPredictionService.image.tag=${{ github.sha }} \
+            --set patientService.image.tag=develop-latest \
+            --set appointmentService.image.tag=develop-latest \
+            --set notificationService.image.tag=develop-latest \
+            --set aiPredictionService.image.tag=develop-latest \
             --wait --timeout=600s
 
       - name: ✅ Verify Deployment
@@ -299,10 +299,10 @@ jobs:
             -f ./helm/smart-hospital/values.yaml \
             --set global.environment=staging \
             --set image.registry=${{ env.ACR_REGISTRY }} \
-            --set patientService.image.tag=${{ github.sha }} \
-            --set appointmentService.image.tag=${{ github.sha }} \
-            --set notificationService.image.tag=${{ github.sha }} \
-            --set aiPredictionService.image.tag=${{ github.sha }} \
+            --set patientService.image.tag=develop-latest \
+            --set appointmentService.image.tag=develop-latest \
+            --set notificationService.image.tag=develop-latest \
+            --set aiPredictionService.image.tag=develop-latest \
             --wait --timeout=600s
 
   # ============================================
@@ -340,10 +340,10 @@ jobs:
             -f ./helm/smart-hospital/values.yaml \
             --set global.environment=production \
             --set image.registry=${{ env.ACR_REGISTRY }} \
-            --set patientService.image.tag=${{ github.sha }} \
-            --set appointmentService.image.tag=${{ github.sha }} \
-            --set notificationService.image.tag=${{ github.sha }} \
-            --set aiPredictionService.image.tag=${{ github.sha }} \
+            --set patientService.image.tag=latest \
+            --set appointmentService.image.tag=latest \
+            --set notificationService.image.tag=latest \
+            --set aiPredictionService.image.tag=latest \
             --set patientService.replicas=3 \
             --set appointmentService.replicas=3 \
             --set aiPredictionService.replicas=3 \
