@@ -242,7 +242,7 @@ jobs:
         uses: azure/aks-set-context@v3
         with:
           resource-group: ${{ env.AKS_RESOURCE_GROUP }}
-          cluster-name: ${{ env.AKS_CLUSTER_NAME }}-dev
+          cluster-name: ${{ env.AKS_CLUSTER_NAME }}
 
       - name: 🚀 Deploy with Helm
         run: |
@@ -287,7 +287,7 @@ jobs:
         uses: azure/aks-set-context@v3
         with:
           resource-group: ${{ env.AKS_RESOURCE_GROUP }}
-          cluster-name: ${{ env.AKS_CLUSTER_NAME }}-staging
+          cluster-name: ${{ env.AKS_CLUSTER_NAME }}
 
       - name: 🚀 Deploy with Helm
         run: |
@@ -327,7 +327,7 @@ jobs:
         uses: azure/aks-set-context@v3
         with:
           resource-group: ${{ env.AKS_RESOURCE_GROUP }}
-          cluster-name: ${{ env.AKS_CLUSTER_NAME }}-production
+          cluster-name: ${{ env.AKS_CLUSTER_NAME }}
 
       - name: 🚀 Deploy with Helm
         run: |
