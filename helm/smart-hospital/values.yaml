@@ -137,7 +137,7 @@ monitoring:
 
 database:
   host: "psql-smart-hospital-dev.postgres.database.azure.com"
-  user: "hospitaladmin@psql-smart-hospital-dev"
+  user: "hospitaladmin"
   password: "SmartHospital@123"
   names:
     patient: "patient_db"
