@@ -256,8 +256,7 @@ jobs:
             --set patientService.image.tag=develop-latest \
             --set appointmentService.image.tag=develop-latest \
             --set notificationService.image.tag=develop-latest \
-            --set aiPredictionService.image.tag=develop-latest \
-            --wait --timeout=600s
+            --set aiPredictionService.image.tag=develop-latest
 
       - name: ✅ Verify Deployment
         run: |
@@ -302,8 +301,7 @@ jobs:
             --set patientService.image.tag=develop-latest \
             --set appointmentService.image.tag=develop-latest \
             --set notificationService.image.tag=develop-latest \
-            --set aiPredictionService.image.tag=develop-latest \
-            --wait --timeout=600s
+            --set aiPredictionService.image.tag=develop-latest
 
   # ============================================
   # Stage 7: Deploy to Production
@@ -346,13 +344,8 @@ jobs:
             --set aiPredictionService.image.tag=latest \
             --set patientService.replicas=3 \
             --set appointmentService.replicas=3 \
-            --set aiPredictionService.replicas=3 \
-            --wait --timeout=600s
+            --set aiPredictionService.replicas=3
 
       - name: ✅ Verify Production Deployment
         run: |
           kubectl get deployments -n smart-hospital
-          kubectl rollout status deployment/patient-service -n smart-hospital
-          kubectl rollout status deployment/appointment-service -n smart-hospital
-          kubectl rollout status deployment/notification-service -n smart-hospital
-          kubectl rollout status deployment/ai-prediction-service -n smart-hospital
